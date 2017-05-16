@@ -1,0 +1,8 @@
+{
+  "db": {
+    "host": "localhost",
+    "database": "anunturi",
+    "user": "postgres",
+    "password": "house2014"
+  }
+}
