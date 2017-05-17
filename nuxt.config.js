@@ -20,7 +20,7 @@ module.exports = {
   /*
   ** Global CSS
   */
-  css: ['~assets/css/main.css', '~assets/libs/materialize/css/materialize.min.css'],
+  css: ['~assets/css/main.css', '~assets/libs/materialize/css/materialize.css'],
   /*
   ** Add axios globally
   */

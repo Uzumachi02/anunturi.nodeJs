@@ -2,7 +2,7 @@
   <header>
     <nav class="white">
       <div class="nav-wrapper container">
-        <a id="logo-container" href="#" class="brand-logo">Anunturi.nodeJs</a>
+        <nuxt-link id="logo-container" to="/" class="brand-logo">Anunturi.nodeJs</nuxt-link>
       </div>
     </nav>
   </header>

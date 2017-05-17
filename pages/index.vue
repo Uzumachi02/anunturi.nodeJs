@@ -1,29 +1,30 @@
 <template>
-  <section class="container">
-    <img src="../assets/img/logo.png" alt="Nuxt.js Logo" class="logo" />
-    <h1 class="title">
-      USERS
-    </h1>
-    <nuxt-link to="/add">Aduga anunt</nuxt-link>
-    <ul class="users">
-      <li v-for="(user, index) in users" class="user">
-        <nuxt-link :to="{ name: 'id', params: { id: index }}">
-          {{ user.name }}
-        </nuxt-link>
-      </li>
-    </ul>
-  </section>
+  <div>
+    <div class="section homeSection">
+      <div class="container homeSection__content">
+        <h1 class="homeSection__title">Anunturi pentru orce gust</h1>
+      </div>
+    </div>
+
+    <category-list></category-list>
+
+    <div class="divider"></div>
+
+    <last-anunt></last-anunt>
+  </div>
+
+
 </template>
 
 <script>
-import axios from '~plugins/axios'
+import CategoryList from '~components/CategoryList.vue'
+import LastAnunt from '~components/LastAnunt.vue'
+//  import axios from '~plugins/axios'
 
 export default {
-  async asyncData () {
-    let { data } = await axios.get('/api/users')
-    return {
-      users: data
-    }
+  components: {
+    CategoryList,
+    LastAnunt
   },
   head () {
     return {
@@ -33,19 +34,30 @@ export default {
 }
 </script>
 
-<style scoped>
-.title
-{
-  margin: 30px 0;
-}
-.users
-{
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.user
-{
-  margin: 10px 0;
-}
+<style lang="sass">
+  @import '~assets/sass/smart-grid'
+
+  .homeSection
+    height: 350px
+    position: relative
+
+    &:after
+      background-image: url("/img/nightCity.jpg")
+      filter: blur(1px)
+      background-position-x: 50%
+      background-position-y: 50%
+      position: absolute
+      top: 0
+      bottom: 0
+      left: 0
+      right: 0
+      content: ''
+      z-index: -1
+
+    &__content
+      color: #fff
+      text-align: center
+
+    &__title
+      font-weight: 700
 </style>
