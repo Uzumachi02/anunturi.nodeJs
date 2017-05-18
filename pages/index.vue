@@ -10,7 +10,10 @@
 
     <div class="divider"></div>
 
-    <last-anunt></last-anunt>
+    <horz-blocks></horz-blocks>
+    <div class="divider"></div>
+    <horz-blocks title="Anunțurile plătite" :more="false"></horz-blocks>
+
   </div>
 
 
@@ -18,13 +21,13 @@
 
 <script>
 import CategoryList from '~components/CategoryList.vue'
-import LastAnunt from '~components/LastAnunt.vue'
+import horzBlocks from '~components/horzBlocks.vue'
 //  import axios from '~plugins/axios'
 
 export default {
   components: {
     CategoryList,
-    LastAnunt
+    horzBlocks
   },
   head () {
     return {

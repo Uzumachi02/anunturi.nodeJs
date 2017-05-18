@@ -20,7 +20,7 @@ module.exports = {
   /*
   ** Global CSS
   */
-  css: ['~assets/css/main.css', '~assets/libs/materialize/css/materialize.css'],
+  css: ['~assets/css/main.css', '~assets/libs/materialize/css/materialize.css', 'swiper/dist/css/swiper.css'],
   /*
   ** Add axios globally
   */
@@ -40,6 +40,6 @@ module.exports = {
       }
     }
      */
-  }
-  // plugins: [{src: '~plugins/vue-select', ssr: false}]
+  },
+  plugins: [{src: '~plugins/swiper', ssr: false}]
 }

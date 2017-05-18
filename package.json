@@ -17,9 +17,11 @@
     "cross-env": "^4.0.0",
     "express": "^4.14.0",
     "joi": "^10.4.2",
+    "marked": "^0.3.6",
     "nuxt": "~0.10.6",
     "pg": "^6.1.5",
-    "source-map-support": "^0.4.14"
+    "source-map-support": "^0.4.14",
+    "vue-awesome-swiper": "^2.4.2"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
