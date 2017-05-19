@@ -2,8 +2,15 @@
   <div>
     <section class="container">
       <div class="anuntView__head">
-        <h1 class="anuntView__title" v-text="anuntul.title"></h1>
-        <p class="anuntView__price" v-text="anuntul.price"></p>
+        <div class="row">
+          <div class="col l9 m9">
+            <h1 class="anuntView__title" v-text="anuntul.title"></h1>
+          </div>
+          <div class="col l3 m3">
+            <p class="anuntView__price" v-text="anuntul.price"></p>
+          </div>
+        </div>
+        
         <p class="anuntView__stat">
           <span><i class="matIcon">location_on</i> {{ anuntul.location }}</span>
           <span><i class="matIcon">access_time</i> {{ anuntul.dt_add }}</span>
@@ -12,7 +19,7 @@
       </div>
 
       <div class="row">
-        <div class="col s9">
+        <div class="col l9">
           <div class="card">
             <div class="card-image" v-if="anuntul.img[0]">
               <img :src="anuntul.img[0]">
@@ -21,12 +28,13 @@
           </div>
         </div>
 
-        <div class="col s3">
-          <div class="card">
+        <div class="col l3">
+          <div class="card diller">
             <div class="card-content">
-              <p><i class="matIcon">person</i> Ivan Petrovi4</p>
-              <p><i class="matIcon">phone</i> 078 55 884 55</p>
+              <p><strong>Vinzatorul</strong></p>
+              <p><i class="matIcon">person</i> Ionel</p>
               <p><i class="matIcon">email</i> petrovi4@mail.ru</p>
+              <p class="diller__phone"><i class="matIcon">phone</i> 078 55 884 55</p>
             </div>
           </div>
 
@@ -58,7 +66,7 @@ export default {
     return {
       anuntul: {
         title: 'Audi A8, 2012',
-        price: '18 000 lei',
+        price: '360 000 lei',
         location: 'Balți',
         img: [
           'http://s.auto.drom.ru/i24198/c/photos/fullsize/audi/a8/audi_a8_554776.jpg',
@@ -92,6 +100,8 @@ export default {
     &__price
       color: #f44336
       font-size: 2.6em
+      text-align: right
+      line-height: 69px
 
     &__stat
       margin: 0
@@ -101,4 +111,11 @@ export default {
       span
         margin-right: 50px
 
+  .diller
+    font-size: 1.2em
+
+    &__phone
+      font-size: 1.4em
+      margin-top: 15px !important
+      font-weight: 500
 </style>

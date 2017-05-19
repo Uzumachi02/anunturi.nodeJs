@@ -135,8 +135,9 @@ export default {
     async save() {
       this.formDates.describe = simplemde.value()
       console.log(this.formDates)
-      let ress = await axios.post('/api/anunt/add', this.formDates)
-      console.info(ress)
+      //let ress = await axios.post('/api/anunt/add', this.formDates)
+      //console.info(ress)
+      this.$router.push('/')
     }
   }
 }
