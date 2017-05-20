@@ -4,7 +4,8 @@ import helper from './_helperRepository'
 const table = 'img_anunt'
 
 export default {
-  add
+  add,
+  getAnuntImages
 }
 
 async function add(idAnunt, values) {
@@ -22,4 +23,9 @@ async function add(idAnunt, values) {
   } catch (err) {
     throw new Error(err.message)
   }
+}
+
+function getAnuntImages (id) {
+  const sql = `SELECT * FROM ${table} WHERE anunt_id = $1`
+  return db.query(sql, [id])
 }

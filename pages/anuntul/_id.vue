@@ -4,16 +4,16 @@
       <div class="anuntView__head">
         <div class="row">
           <div class="col l9 m9">
-            <h1 class="anuntView__title" v-text="anuntul.title"></h1>
+            <h1 class="anuntView__title" v-text="anuntul.titlu"></h1>
           </div>
           <div class="col l3 m3">
-            <p class="anuntView__price" v-text="anuntul.price"></p>
+            <p class="anuntView__price" v-text="anuntul.price + ' lei'"></p>
           </div>
         </div>
-        
+
         <p class="anuntView__stat">
           <span><i class="matIcon">location_on</i> {{ anuntul.location }}</span>
-          <span><i class="matIcon">access_time</i> {{ anuntul.dt_add }}</span>
+          <span><i class="matIcon">access_time</i> {{ anuntul.add_dt | normalizeDate }}</span>
           <span><i class="matIcon">remove_red_eye</i> {{ anuntul.view }}</span>
         </p>
       </div>
@@ -21,8 +21,10 @@
       <div class="row">
         <div class="col l9">
           <div class="card">
-            <div class="card-image" v-if="anuntul.img[0]">
-              <img :src="anuntul.img[0]">
+            <div class="card-image" v-if="anuntul.images" :key="anuntul.id">
+              <div id="fotorama">
+                <img v-for="img in anuntul.images" :src="img.url">
+              </div>
             </div>
             <div class="card-content" v-html="getDescribe"></div>
           </div>
@@ -59,29 +61,56 @@ import horzBlocks from '~components/horzBlocks.vue'
 import marked from 'marked'
 
 export default {
+  mounted() {
+    console.log('mounted')
+    setTimeout(() => {
+      $('#fotorama').fotorama({
+        allowfullscreen: true,
+        nav: 'thumbs'
+      })
+    }, 100)
+  },
+  updated() {
+    console.log('updated')
+    setTimeout(() => {
+      $('#fotorama').fotorama({
+        allowfullscreen: true,
+        nav: 'thumbs'
+      })
+    }, 100)
+  },
   components: { horzBlocks },
-  asyncData ({ params, error }) {
-    console.log('est')
-    console.log(params)
-    return {
-      anuntul: {
-        title: 'Audi A8, 2012',
-        price: '360 000 lei',
-        location: 'Balți',
-        img: [
-          'http://s.auto.drom.ru/i24198/c/photos/fullsize/audi/a8/audi_a8_554776.jpg',
-          'https://s.auto.drom.ru/i24205/pubs/4/49846/2525940.jpg',
-          'https://s.auto.drom.ru/i24205/pubs/4/49846/2525944.jpg'
-        ],
-        describes: 'Lorem __ipsum__ dolor _sit amet_, consectetur adipisicing elit. Ab amet aspernatur assumenda dolore eveniet excepturi inventore, iusto optio porro quisquam, ratione rem repudiandae similique sint sit, sunt tenetur unde. Sint!',
-        dt_add: '18.05.2017',
-        view: 407
+  async asyncData ({ params, error }) {
+    try {
+      await axios.get('/api/addview/' + params.id)
+      const ress = await axios.get('/api/getanunt/' + params.id)
+      if( ress.data.status === 'failure' )
+        throw ress.data.message
+
+      console.log(ress.data)
+
+      return {
+        anuntul: ress.data.item
       }
+    } catch (err) {
+      error({ statusCode: 404, message: err })
+    }
+
+  },
+  head () {
+    return {
+      title: 'Audi A8, 2012',
+      link: [
+        { rel: 'stylesheet', type: 'text/css', href: '/libs/fotorama-4.6.4/fotorama.css' }
+      ],
+      script: [
+        { src: '/libs/fotorama-4.6.4/fotorama.js' }
+      ]
     }
   },
   computed: {
     getDescribe() {
-      return marked(this.anuntul.describes, { sanitize: true })
+      return marked(this.anuntul.describe, { sanitize: true })
     }
   }
 }
@@ -118,4 +147,5 @@ export default {
       font-size: 1.4em
       margin-top: 15px !important
       font-weight: 500
+
 </style>

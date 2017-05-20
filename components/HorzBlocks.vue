@@ -1,5 +1,5 @@
 <template>
-  <div class="section horzBlocks">
+  <div class="section horzBlocks" v-if="anunts.length > 0">
     <div class="container">
       <div class="horzBlocks__head">
         <h2 class="center-align grey-text text-darken-3" v-text="title"></h2>
@@ -10,22 +10,22 @@
       <div class="swiper-outer">
         <div v-swiper:horzBlocks="swiperOption">
           <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="n in limit">
-              <nuxt-link class="card horzBlock__link" :to="{ name: 'anuntul-id', params: { id: n } }">
+            <div class="swiper-slide" v-for="anunt in anunts" :key="anunt.id">
+              <nuxt-link class="card horzBlock__link" :to="{ name: 'anuntul-id', params: { id: anunt.id } }">
                 <div class="card-image">
-                  <img :src="anunt[0].img" :alt="anunt[0].titlu">
-                  <span class="badge horzBlock__price" v-text="anunt[0].price"></span>
+                  <img :src="anunt.image" :alt="anunt.titlu">
+                  <span class="badge horzBlock__price" v-text="anunt.price"></span>
                 </div>
                 <div class="card-content">
-                  <p class="horzBlock__title" v-text="anunt[0].titlu"></p>
+                  <p class="horzBlock__title" v-text="anunt.titlu"></p>
                 </div>
                 <div class="card-action">
                 <span class="horzBlock__stat">
-                  <i class="matIcon">access_time</i> 17.05.2017
+                  <i class="matIcon">access_time</i> {{ anunt.add_dt | normalizeDate }}
                 </span>
 
                   <span class="horzBlock__stat">
-                  <i class="matIcon">remove_red_eye</i> {{ n + 10 }}
+                  <i class="matIcon">remove_red_eye</i> {{ anunt.view }}
                 </span>
                 </div>
               </nuxt-link>
@@ -46,7 +46,7 @@
 
 <script>
   import NuxtLink from '../.nuxt/components/nuxt-link'
-//  import axios from '~plugins/axios'
+  import axios from '~plugins/axios'
 
   export default {
     props: {
@@ -72,18 +72,13 @@
       this.rndId = Math.random().toString(36).substr(2, 5)
       this.swiperOption.nextButton = '.btn-next-' + this.rndId
       this.swiperOption.prevButton = '.btn-prev-' + this.rndId
+
+      this.getAnunts()
     },
     data () {
       return {
         rndId: '',
-        anunt: [
-          {
-            id: 1,
-            titlu: 'Audi A8, 2012',
-            img: 'http://s.auto.drom.ru/i24198/c/photos/fullsize/audi/a8/audi_a8_554776.jpg',
-            price: '19 000 lei'
-          }
-        ],
+        anunts: [],
         swiperOption: {
           slidesPerView: 4,
           spaceBetween: 30,
@@ -95,6 +90,18 @@
               slidesPerView: 2
             }
           }
+        }
+      }
+    },
+    methods: {
+      async getAnunts() {
+        try {
+          const params = { limit: this.limit, type: this.type }
+          const ress = await axios.get('/api/getanuntforhorzblock', { params } )
+          this.anunts = ress.data.items
+          console.log(this.anunts)
+        } catch (err) {
+          console.error(err)
         }
       }
     }

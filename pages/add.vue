@@ -2,59 +2,60 @@
   <div>
     <div class="section teal">
       <div class="container">
-        <h1 class="white-text">Adaugarea noului anunt</h1>
+        <h1 class="white-text">Adaugarea noului anunț</h1>
       </div>
     </div>
     <section class="container">
       <div class="card">
         <div class="card-content">
           <form action="" class="" @submit.prevent="save">
-            <span class="card-title">Setarile anuntului</span>
+            <span class="card-title">Setările anunțului</span>
             <div class="row">
               <div class="col s6">
-                <label>Tipul anuntului</label>
+                <label>Tipul anunțului</label>
                 <select class="browser-default" v-model.number="formDates.tipAnunt">
-                  <option value="" disabled selected>Selectati tipul</option>
-                  <option value="1">Option 1</option>
-                  <option value="2">Option 2</option>
-                  <option value="3">Option 3</option>
+                  <option value="" disabled selected>Selectați tipul</option>
+                  <option v-for="tip in dateAdd.tipAnunt" :value="tip.id" :key="tip.id" v-text="tip.name"></option>
                 </select>
               </div>
 
               <div class="col s6">
-                <label>Categoria anuntului</label>
+                <label>Categoria anunțului</label>
                 <select class="browser-default" v-model.number="formDates.catAnunt">
-                  <option value="" disabled selected>Selectari categoria</option>
-                  <option value="1">Option 1</option>
-                  <option value="2">Option 2</option>
-                  <option value="3">Option 3</option>
+                  <option value="" disabled selected>Selecțari categoria</option>
+                  <option v-for="cat in dateAdd.catAnunt" :value="cat.id" :key="cat.id" v-text="cat.name"></option>
                 </select>
               </div>
             </div>
 
-            <span class="card-title">Detaliile anuntului</span>
+            <span class="card-title">Detaliile anunțului</span>
             <div class="row">
-              <div class="input-field col s6">
+              <div class="input-field col s12">
                 <input id="title" type="text" v-model.lazy="formDates.title">
                 <label for="title">Denumirea</label>
               </div>
 
               <div class="input-field col s6">
                 <input id="price" type="text" v-model.lazy="formDates.price">
-                <label for="price">Pretu</label>
+                <label for="price">Prețul</label>
+              </div>
+
+              <div class="input-field col s6">
+                <input id="location" type="text" v-model.lazy="formDates.location">
+                <label for="price">Localitatea</label>
               </div>
 
               <div class="col s12 markDown">
-                <label for="describe">Descriere <em>(se permite folosirea Markdown)</em></label>
+                <label for="describe">Descrierea <em>(se permite folosirea Markdown)</em></label>
                 <textarea id="describe" v-model.lazy="formDates.describe"></textarea>
               </div>
             </div>
 
-            <span class="card-title">Imaginile anuntului</span>
+            <span class="card-title">Imaginiile anunțului</span>
             <div class="row">
               <div class="input-field col s12">
                 <input @change="addImage" id="baseImage" type="text" class="validate" :disabled="formDates.images.length == 5">
-                <label for="baseImage">Introduceti link-ul imaginii</label>
+                <label for="baseImage">Introduceși link-ul imaginii</label>
               </div>
             </div>
 
@@ -72,7 +73,7 @@
 
             <div class="row">
               <div class="col s12">
-                <button type="submit" class="waves-effect waves-light btn">Adaugare</button>
+                <button type="submit" class="waves-effect waves-light btn">Adăugare</button>
               </div>
             </div>
           </form>
@@ -88,10 +89,9 @@ import axios from '~plugins/axios'
 var simplemde = null
 export default {
   mounted() {
-    if (process.BROWSER_BUILD) {
-      simplemde = new SimpleMDE({ element: document.getElementById("describe") });
-    }
-
+    setTimeout(() => {
+      simplemde = new SimpleMDE({ element: document.getElementById("describe") })
+    }, 100)
   },
   data () {
     return {
@@ -102,9 +102,14 @@ export default {
         title: '',
         price: '',
         describe: '',
-        images: []
+        images: [],
+        location: ''
       }
     }
+  },
+  async asyncData() {
+    let res = await axios.get('/api/datesforadd')
+    return { dateAdd: res.data }
   },
   head () {
     return {
@@ -135,9 +140,11 @@ export default {
     async save() {
       this.formDates.describe = simplemde.value()
       console.log(this.formDates)
-      //let ress = await axios.post('/api/anunt/add', this.formDates)
-      //console.info(ress)
-      this.$router.push('/')
+      let ress = await axios.post('/api/anunt/add', this.formDates)
+      console.info(ress)
+
+      if( ress.data.status === 'success' && ress.data.id > 0)
+        this.$router.push('/anuntul/' + ress.data.id)
     }
   }
 }

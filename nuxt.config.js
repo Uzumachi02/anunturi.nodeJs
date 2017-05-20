@@ -41,5 +41,9 @@ module.exports = {
     }
      */
   },
-  plugins: [{src: '~plugins/swiper', ssr: false}]
+  plugins: [
+    { src: '~plugins/swiper', ssr: false },
+    { src: '~plugins/validate' },
+    { src: '~plugins/normalizeDate' }
+  ]
 }
