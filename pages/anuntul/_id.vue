@@ -51,7 +51,7 @@
 
     </section>
 
-    <horz-blocks title="Altete" :more="false"></horz-blocks>
+    <horz-blocks title="Altete" :more="false" type="category" :catId="anuntul.cat_id"></horz-blocks>
 
   </div>
 </template>

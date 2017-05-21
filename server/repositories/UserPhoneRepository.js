@@ -4,11 +4,28 @@ import helper from './_helperRepository'
 const table = 'user_phone'
 
 export default {
-  add
+  add,
+  getForUser
 }
 
-function add(values) {
-  const requireFields = ['user_id', 'number']
-  let insert = helper.getInsertQuery(table, requireFields, values)
-  return db.query(insert.sql, insert.values)
+async function add(idUs, values) {
+  try {
+    await db.query(`DELETE FROM ${table} WHERE "user_id" = $1`, [idUs])
+
+    let sql = `INSERT INTO ${table} ("user_id", "number") VALUES `
+
+    values.forEach((val, index) => {
+      sql += `($1, $${index + 2}), `
+    })
+
+    sql = sql.slice(0, -2)
+    return db.query(sql, [idUs, ...values])
+  } catch (err) {
+    throw new Error(err.message)
+  }
+}
+
+function getForUser (id) {
+  const sql = `SELECT * FROM ${table} WHERE user_id = $1`
+  return db.query(sql, [id])
 }

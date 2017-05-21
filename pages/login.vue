@@ -9,12 +9,12 @@
         </p>
         <form @submit.prevent="logare">
           <div class="input-field">
-            <input id="login" v-model.lazy="login" type="text" class="validate" required />
+            <input id="login" v-model.lazy="login" type="text" class="validate" required minlength="4"/>
             <label for="login">Introduceți loginu</label>
           </div>
 
           <div class="input-field">
-            <input id="password" v-model.lazy="password" type="password" class="validate" required />
+            <input id="password" v-model.lazy="password" type="password" class="validate" required minlength="6" />
             <label for="password">Introduceți parola</label>
           </div>
 
@@ -52,17 +52,16 @@ export default {
   methods: {
     async logare () {
       try {
-
-        let login = await this.$store.dispatch('login', {
+        let user = await this.$store.dispatch('login', {
           login: this.login,
           password: this.password
         })
 
         Materialize.toast('Logare succesă!', 4000)
-        console.log(login)
-
+        this.$router.push('/user/' + user.id)
       } catch (err) {
         console.error(err)
+        Materialize.toast(err, 4000)
       }
     }
   }

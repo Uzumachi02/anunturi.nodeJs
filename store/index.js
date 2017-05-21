@@ -26,15 +26,12 @@ export const actions = {
     }
   },
   async login ({ commit }, { login, password }) {
-    try {
-      console.log('login')
-      let ress = await axios.post('/api/logare', {login, password})
-      if( ress.data.status === 'success' ) {
-        commit('SET_USER', ress.data.user)
-      }
-      console.log(ress.data)
-    } catch (err) {
-      console.error(err)
+    let ress = await axios.post('/api/logare', {login, password})
+    if( ress.data.status === 'success' ) {
+      commit('SET_USER', ress.data.user)
+      return ress.data.user
+    } else {
+      throw ress.data.message
     }
   },
   async getCatAndTipAnunt({ commit }) {

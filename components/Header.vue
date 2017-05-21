@@ -6,7 +6,9 @@
 
         <ul id="nav-mobile" class="right hide-on-med-and-down">
           <li><nuxt-link to="/add">Adaugă</nuxt-link></li>
-          <li v-if="$store.state.authUser.id"><a href="#" v-text="$store.state.authUser.login"></a></li>
+          <li v-if="$store.state.authUser.id">
+            <nuxt-link :to="{ name: 'user-id', params: { id: $store.state.authUser.id } }" v-text="$store.state.authUser.login"></nuxt-link>
+          </li>
           <li v-else><nuxt-link to="/login">Logare</nuxt-link></li>
         </ul>
       </div>

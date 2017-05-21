@@ -65,6 +65,14 @@
       more: {
         type: Boolean,
         default: true
+      },
+      userId: {
+        type: Number,
+        default: 0
+      },
+      catId: {
+        type: Number,
+        default: 0
       }
     },
     components: { NuxtLink },
@@ -96,7 +104,12 @@
     methods: {
       async getAnunts() {
         try {
-          const params = { limit: this.limit, type: this.type }
+          let params = { limit: this.limit, type: this.type }
+          if( this.type === 'user' )
+            params.user_id = this.userId
+          if( this.type === 'category' )
+            params.cat_id = this.catId
+
           const ress = await axios.get('/api/getanuntforhorzblock', { params } )
           this.anunts = ress.data.items
           console.log(this.anunts)

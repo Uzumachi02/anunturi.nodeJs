@@ -36,4 +36,8 @@ router.post('/register', UserController.create)
 
 router.post('/logare', UserController.logare)
 
+router.get('/getuser/:id', UserController.get)
+
+router.post('/user/edit', UserController.edit)
+
 export default router
