@@ -12,7 +12,7 @@
 
     <horz-blocks></horz-blocks>
     <div class="divider"></div>
-    <horz-blocks title="Anunțurile plătite" :more="false"></horz-blocks>
+    <horz-blocks title="Anunțurile populare" :more="false" type="vip"></horz-blocks>
 
   </div>
 

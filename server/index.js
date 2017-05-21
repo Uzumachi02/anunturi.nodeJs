@@ -15,7 +15,7 @@ app.use(session({
   secret: 'anunt.nodeJs-proiect',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 60000 }
+  cookie: { maxAge: 864e5 }
 }))
 
 app.set('port', port)

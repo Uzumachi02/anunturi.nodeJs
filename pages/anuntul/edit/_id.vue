@@ -2,7 +2,7 @@
   <div>
     <div class="section teal">
       <div class="container">
-        <h1 class="white-text">Adaugarea noului anunț</h1>
+        <h1 class="white-text">Editarea anunțului</h1>
       </div>
     </div>
     <section class="container">
@@ -13,7 +13,7 @@
             <div class="row">
               <div class="col s6">
                 <label>Tipul anunțului</label>
-                <select class="browser-default" v-model.number="formDates.tipAnunt">
+                <select class="browser-default" v-model.number="formDates.tip_id">
                   <option value="" disabled selected>Selectați tipul</option>
                   <option v-for="tip in $store.state.tipAnunt" :value="tip.id" :key="tip.id" v-text="tip.name"></option>
                 </select>
@@ -21,7 +21,7 @@
 
               <div class="col s6">
                 <label>Categoria anunțului</label>
-                <select class="browser-default" v-model.number="formDates.catAnunt">
+                <select class="browser-default" v-model.number="formDates.cat_id">
                   <option value="" disabled selected>Selecțari categoria</option>
                   <option v-for="cat in $store.state.catAnunt" :value="cat.id" :key="cat.id" v-text="cat.name"></option>
                 </select>
@@ -31,7 +31,7 @@
             <span class="card-title">Detaliile anunțului</span>
             <div class="row">
               <div class="input-field col s12">
-                <input id="title" type="text" v-model.lazy="formDates.title">
+                <input id="title" type="text" v-model.lazy="formDates.titlu">
                 <label for="title">Denumirea</label>
               </div>
 
@@ -73,7 +73,7 @@
 
             <div class="row">
               <div class="col s12">
-                <button type="submit" class="waves-effect waves-light btn">Adăugare</button>
+                <button type="submit" class="waves-effect waves-light btn">Editare</button>
               </div>
             </div>
           </form>
@@ -98,15 +98,27 @@ export default {
     return {
       maxImage: 5,
       formDates: {
-        tipAnunt: '',
-        catAnunt: '',
-        title: '',
+        tip_id: '',
+        cat_id: '',
+        titlu: '',
         price: '',
         describe: '',
         images: [],
-        location: ''
+        location: '',
+        isEditImg: false
       }
     }
+  },
+  async asyncData({ params, redirect, isClient }) {
+    let anunt = await axios.get('/api/foredit/' + params.id)
+    if( anunt.data.status !== 'success' ) {
+      if( isClient )
+        Materialize.toast(anunt.data.message, 4000)
+      redirect('/anuntul/' + params.id)
+      return
+    }
+
+    return { formDates: anunt.data.item }
   },
   head () {
     return {
@@ -122,12 +134,14 @@ export default {
   methods: {
     addImage(e) {
       if( e.target.value && this.formDates.images.length <= this.maxImage ) {
+        this.formDates.isEditImg = true
         this.formDates.images.push(e.target.value)
         e.target.value = ''
       }
       console.log(e.target.value)
     },
     removeImage(index) {
+      this.formDates.isEditImg = true
       let findIndex = this.formDates.images.findIndex((el, ind) => ind === index)
 
       if( findIndex > -1 ) {
@@ -135,14 +149,17 @@ export default {
       }
     },
     async save() {
-      this.formDates.describe = simplemde.value()
-      console.log(this.formDates)
-      let ress = await axios.post('/api/anunt/add', this.formDates)
-      console.info(ress)
+      try {
+        this.formDates.describe = simplemde.value()
+        let ress = await axios.post('/api/anunt/edit', this.formDates)
 
-      if( ress.data.status === 'success' && ress.data.id > 0) {
-        Materialize.toast('Anunțul a fost adăugat!', 4000)
-        this.$router.push('/anuntul/' + ress.data.id)
+        if (ress.data.status === 'success' && ress.data.id > 0) {
+          Materialize.toast('Anunțul a fost editat!', 4000)
+          this.$router.push('/anuntul/' + ress.data.id)
+        } else Materialize.toast(ress.data.message, 4000)
+      } catch (err) {
+        console.error(err)
+        Materialize.toast(err, 4000)
       }
     }
   }
@@ -155,10 +172,12 @@ export default {
     margin-bottom: 10px;
     display: block;
   }
+
   .addImages__wrap {
     display: flex;
     flex-wrap: wrap;
   }
+
   .addImages {
     position: relative;
     margin-left: 0 !important;

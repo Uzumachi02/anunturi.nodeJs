@@ -12,6 +12,7 @@
         </div>
 
         <p class="anuntView__stat">
+          <span v-if="!anuntul.status" class="anuntView__hide">Ascuns</span>
           <span><i class="matIcon">location_on</i> {{ anuntul.location }}</span>
           <span><i class="matIcon">access_time</i> {{ anuntul.add_dt | normalizeDate }}</span>
           <span><i class="matIcon">remove_red_eye</i> {{ anuntul.view }}</span>
@@ -34,23 +35,23 @@
           <div class="card diller">
             <div class="card-content">
               <p><strong>Vinzatorul</strong></p>
-              <p><i class="matIcon">person</i> Ionel</p>
-              <p><i class="matIcon">email</i> petrovi4@mail.ru</p>
-              <p class="diller__phone"><i class="matIcon">phone</i> 078 55 884 55</p>
+              <p v-text="getUserName"></p>
+              <p v-text="anuntul.email"></p>
+              <p class="diller__phone" v-text="anuntul.phone"></p>
             </div>
           </div>
 
-          <div class="collection">
-            <a href="#!" class="collection-item">Modifică</a>
-            <a href="#!" class="collection-item">Ascunde</a>
-            <a href="#!" class="collection-item">Șterge</a>
+          <div v-if="isOwner" class="collection">
+            <nuxt-link :to="{ name: 'anuntul-edit-id', params: { id: anuntul.id } }" class="collection-item">Modifică</nuxt-link>
+            <a @click.prevent="toggleStatus" class="collection-item">{{ anuntul.status ? 'Ascunde' : 'Arată' }}</a>
+            <a @click.prevent="remove" class="collection-item">Șterge</a>
           </div>
         </div>
       </div>
 
     </section>
 
-    <horz-blocks title="Anunțuri asemănătoare" :more="false"></horz-blocks>
+    <horz-blocks title="Altete" :more="false"></horz-blocks>
 
   </div>
 </template>
@@ -59,6 +60,7 @@
 import axios from '~plugins/axios'
 import horzBlocks from '~components/horzBlocks.vue'
 import marked from 'marked'
+import NuxtLink from '../../.nuxt/components/nuxt-link'
 
 export default {
   mounted() {
@@ -79,7 +81,9 @@ export default {
       })
     }, 100)
   },
-  components: { horzBlocks },
+  components: {
+    NuxtLink,
+    horzBlocks },
   async asyncData ({ params, error }) {
     try {
       await axios.get('/api/addview/' + params.id)
@@ -111,12 +115,56 @@ export default {
   computed: {
     getDescribe() {
       return marked(this.anuntul.describe, { sanitize: true })
+    },
+    isOwner() {
+      if( this.$store.state.authUser.id ) {
+        return this.$store.state.authUser.id === this.anuntul.user_id
+      }
+      return false
+    },
+    getUserName() {
+      if( this.anuntul.f_name ) {
+        if( this.anuntul.l_name )
+          return this.anuntul.f_name + ' ' + this.anuntul.l_name
+        return this.anuntul.f_name
+      }
+      return this.anuntul.login
+    }
+  },
+  methods: {
+    async toggleStatus() {
+      try {
+        const params = {status: this.anuntul.status ? 0 : 1}
+        let res = await axios.get('/api/toggleStatus/' + this.anuntul.id, {params})
+        if (res.data.status === 'success') {
+          Materialize.toast('Succes', 4000)
+          this.anuntul.status = res.data.item.status
+        } else Materialize.toast(res.data.message, 4000)
+      } catch (err) {
+        console.error(err)
+        Materialize.toast(err, 4000)
+      }
+    },
+    async remove() {
+      try {
+        let res = await axios.get('/api/delanunt/' + this.anuntul.id)
+        if (res.data.status === 'success') {
+          Materialize.toast('Anunțul s-a șters', 4000)
+          this.$router.push('/anunturile')
+        } else Materialize.toast(res.data.message, 4000)
+      } catch (err) {
+        console.error(err)
+        Materialize.toast(err, 4000)
+      }
     }
   }
 }
 </script>
 
 <style lang="sass">
+  .collection-item
+    cursor: pointer
+
   .anuntView
     &__head
       margin-top: 30px
@@ -139,6 +187,13 @@ export default {
 
       span
         margin-right: 50px
+
+    &__hide
+      background: #f44336
+      color: #fff
+      font-size: 16px
+      padding: 2px 10px
+      border-radius: 2px
 
   .diller
     font-size: 1.2em

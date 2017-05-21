@@ -1,4 +1,8 @@
 module.exports = {
+  loading: {
+    color: '#009688',
+    height: '3px'
+  },
   /*
   ** Headers of the page
   */

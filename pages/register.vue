@@ -59,6 +59,7 @@ import { Validator } from 'simple-vue-validator'
 import axios from '~plugins/axios'
 
 export default {
+  middleware: 'notAuth',
   data() {
     return {
       login: '',

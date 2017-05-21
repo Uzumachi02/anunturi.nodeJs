@@ -11,6 +11,10 @@ import MyFooter from '~components/Footer.vue'
 import MyHeader from '~components/Header.vue'
 
 export default {
+  created() {
+    console.log('Create app')
+    this.$store.dispatch('getCatAndTipAnunt')
+  },
   components: {
     MyFooter,
     MyHeader

@@ -45,7 +45,6 @@ async function create (req, res) {
 
 async function logare (req, res) {
   try {
-    console.log(req.session.authUser)
     let body = req.body
     let schema = {
       login: Joi.string().min(4).max(64).required(),

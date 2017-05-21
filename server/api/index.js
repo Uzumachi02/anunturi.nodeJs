@@ -12,17 +12,25 @@ router.use(users)
 
 router.post('/anunt/add', AnuntController.add)
 
+router.post('/anunt/edit', AnuntController.edit)
+
 router.get('/getanunttip', ApiController.getAnuntTip)
 
 router.get('/datesforadd', ApiController.getDatesForAdd)
 
 router.get('/getanunt/:id', AnuntController.getAnuntById)
 
+router.get('/delanunt/:id', AnuntController.remove)
+
 router.get('/getanuntforhorzblock', AnuntController.getAnunForHorzBlock)
 
 router.get('/getanunturile', AnuntController.getAnunturile)
 
 router.get('/addview/:id', AnuntController.addview)
+
+router.get('/togglestatus/:id', AnuntController.toggleStatus)
+
+router.get('/foredit/:id', AnuntController.forEdit)
 
 router.post('/register', UserController.create)
 

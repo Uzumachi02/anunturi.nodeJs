@@ -37,6 +37,7 @@
 // import axios from '~plugins/axios'
 
 export default {
+  middleware: 'notAuth',
   data() {
     return {
       login: '',
@@ -57,6 +58,7 @@ export default {
           password: this.password
         })
 
+        Materialize.toast('Logare succesă!', 4000)
         console.log(login)
 
       } catch (err) {

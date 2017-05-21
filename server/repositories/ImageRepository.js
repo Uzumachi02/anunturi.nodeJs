@@ -5,7 +5,8 @@ const table = 'img_anunt'
 
 export default {
   add,
-  getAnuntImages
+  getAnuntImages,
+  removeAll
 }
 
 async function add(idAnunt, values) {
@@ -28,4 +29,8 @@ async function add(idAnunt, values) {
 function getAnuntImages (id) {
   const sql = `SELECT * FROM ${table} WHERE anunt_id = $1`
   return db.query(sql, [id])
+}
+
+function removeAll (id) {
+  db.query(`DELETE FROM ${table} WHERE "anunt_id" = $1`, [id])
 }

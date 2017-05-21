@@ -4,47 +4,19 @@
       <h2 class="center-align grey-text text-darken-3">Categorii de anunțuri</h2>
 
       <div class="categoryList">
-        <div class="card horizontal categoryList__item" v-for="(cat, index) in categories" :key="index">
-          <div v-if="cat.img" class="card-image categoryList__img" :style="{ backgroundImage: 'url(' + cat.img + ')' }">
+        <nuxt-link :to="{ name: 'anunturile', query: { category: cat.id } }" class="card horizontal categoryList__item" v-for="(cat, index) in $store.state.catAnunt" :key="cat.id">
+          <div v-if="cat.logo" class="card-image categoryList__img" :style="{ backgroundImage: 'url(' + cat.logo + ')' }">
           </div>
           <div class="card-stacked">
             <div class="card-content">
               <p v-text="cat.name" class="categoryList__name"></p>
             </div>
           </div>
-        </div>
+        </nuxt-link>
       </div>
     </div>
   </div>
 </template>
-
-<script>
-//  import axios from '~plugins/axios'
-
-  export default {
-    data () {
-      return {
-        categories: [
-          {
-            id: 1,
-            name: 'Automobile',
-            img: 'http://media.caranddriver.com/images/media/51/2017-10best-lead-photo-672628-s-original.jpg'
-          },
-          {
-            id: 2,
-            name: 'Telefoane',
-            img: 'http://onestogroup.com/wp-content/uploads/2015/08/mobile_phones.png'
-          },
-          {
-            id: 3,
-            name: 'Laptop-uri',
-            img: 'https://qph.ec.quoracdn.net/main-qimg-86b41b6014de6ce0cd48b2e4f8238275'
-          }
-        ]
-      }
-    }
-  }
-</script>
 
 <style lang="sass">
   @import '~assets/sass/smart-grid'
@@ -56,6 +28,11 @@
     &__item
       +col
       min-width: 150px
+      color: inherit
+
+      &:hover
+        color: #c62828
+        box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.3)
 
     &__img
       width: 150px

@@ -26,7 +26,7 @@
             <label for="type">Tipul</label>
             <select class="browser-default" id="type" v-model.number="filters.type">
               <option value="0">Toate</option>
-              <option v-for="opt in tipAnunt" :value="opt.id" v-text="opt.name"></option>
+              <option v-for="opt in $store.state.tipAnunt" :value="opt.id" v-text="opt.name"></option>
             </select>
           </div>
 
@@ -34,7 +34,7 @@
             <label for="category">Categoria</label>
             <select class="browser-default" id="category" v-model.number="filters.category">
               <option value="0">Toate</option>
-              <option v-for="opt in catAnunt" :value="opt.id" v-text="opt.name"></option>
+              <option v-for="opt in $store.state.catAnunt" :value="opt.id" v-text="opt.name"></option>
             </select>
           </div>
 
@@ -58,8 +58,8 @@
     <div class="section">
       <div class="container">
         <p class="countAnunt">Anunțuri găsite: {{ anunts.length }}</p>
-        <div class="row">
-          <div class="col l3 m4" v-for="anunt in anunts" :key="anunt.id">
+        <div class="anunturile__wrap">
+          <div class="anunturile__item" v-for="anunt in anunts" :key="anunt.id">
             <nuxt-link class="card horzBlock__link" :to="{ name: 'anuntul-id', params: { id: anunt.id } }">
               <div class="card-image">
                 <img :src="anunt.image" :alt="anunt.titlu">
@@ -89,9 +89,6 @@
   import axios from '~plugins/axios'
 
   export default {
-    created() {
-      this.getDatesForSelect()
-    },
     data () {
       return {
         routQuery: this.$route.query,
@@ -133,14 +130,6 @@
       }
     },
     methods: {
-      async getDatesForSelect() {
-        try {
-          let forFilter = await axios.get('/api/datesforadd')
-          console.log(forFilter.data)
-          this.tipAnunt = forFilter.data.tipAnunt
-          this.catAnunt = forFilter.data.catAnunt
-        } catch (err) { console.error(err) }
-      },
       filterUpdate() {
         let query = {}
         let keys = Object.keys(this.filters)
@@ -161,6 +150,19 @@
 
 <style lang="sass">
   @import '~assets/sass/smart-grid'
+
+  .anunturile
+    &__wrap
+      +row-flex
+
+    &__item
+      +col
+      +col-3
+      +col-md-4
+      +col-sm-6
+      +col-xs-12
+      +xs(margin-bottom, 30px)
+      margin-bottom: 60px
 
   .countAnunt
     margin-top: 0
