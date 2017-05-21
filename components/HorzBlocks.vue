@@ -15,6 +15,7 @@
                 <div class="card-image">
                   <img :src="anunt.image" :alt="anunt.titlu">
                   <span class="badge horzBlock__price" v-text="anunt.price"></span>
+                  <span v-if="!anunt.status" class="badge horzBlock__hide">Ascuns</span>
                 </div>
                 <div class="card-content">
                   <p class="horzBlock__title" v-text="anunt.titlu"></p>
@@ -144,6 +145,16 @@
       box-sizing: border-box
 
   .horzBlock
+    &__hide
+      position: absolute
+      display: block
+      background: #2196f3
+      color: #fff !important
+      font-weight: 400
+      border-radius: 2px
+      top: 5px
+      left: 5px
+
     &__price
       position: absolute
       display: block

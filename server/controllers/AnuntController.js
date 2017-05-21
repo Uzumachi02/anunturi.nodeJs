@@ -144,6 +144,7 @@ async function getAnunForHorzBlock (req, res) {
 
     const limit = queries.limit ? parseInt(queries.limit) : 0
     const type = queries.type || 'last'
+    let status = false
 
     let values = []
     let aftSql = ''
@@ -153,11 +154,12 @@ async function getAnunForHorzBlock (req, res) {
     } else if ( type === 'user' && queries.user_id > 0 ) {
       aftSql = 'AND an.user_id = $1 ORDER BY an.id DESC'
       values.push(queries.user_id)
+      status = req.session.authUser && req.session.authUser.id == queries.user_id
     } else {
       aftSql = type === 'vip' ? 'ORDER BY an.view DESC' : 'ORDER BY an.id DESC'
     }
 
-    let items = await AnuntRepository.getForHorzBlock(aftSql, values)
+    let items = await AnuntRepository.getForHorzBlock(aftSql, values, status)
     return helper.sendData({ items: items.rows }, res)
   } catch (err) {
     console.error(err)

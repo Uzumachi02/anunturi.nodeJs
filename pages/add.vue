@@ -136,14 +136,12 @@ export default {
     },
     async save() {
       this.formDates.describe = simplemde.value()
-      console.log(this.formDates)
       let ress = await axios.post('/api/anunt/add', this.formDates)
-      console.info(ress)
 
       if( ress.data.status === 'success' && ress.data.id > 0) {
         Materialize.toast('Anunțul a fost adăugat!', 4000)
         this.$router.push('/anuntul/' + ress.data.id)
-      }
+      } else Materialize.toast(ress.data.message, 4000)
     }
   }
 }

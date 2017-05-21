@@ -6,6 +6,7 @@ import * as Joi from 'joi'
 export default {
   create,
   logare,
+  logout,
   get,
   edit
 }
@@ -62,6 +63,16 @@ async function logare (req, res) {
     await UserRepository.updateOnline(user.rows[0].id)
     req.session.authUser = user.rows[0]
     return helper.sendData({ user: user.rows[0] }, res)
+  } catch (err) {
+    console.error(err)
+    helper.sendFailureMessage(err, res)
+  }
+}
+
+async function logout (req, res) {
+  try {
+    delete req.session.authUser
+    return helper.sendData({}, res)
   } catch (err) {
     console.error(err)
     helper.sendFailureMessage(err, res)

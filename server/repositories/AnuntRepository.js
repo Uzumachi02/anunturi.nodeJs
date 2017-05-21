@@ -35,8 +35,12 @@ function remove (values) {
   return db.query(sql, values)
 }
 
-function getForHorzBlock (aftSql, vars) {
-  const sql = `SELECT an. ID, an.titlu, an.price, an. VIEW, an.add_dt,( SELECT img.url FROM img_anunt AS img WHERE img.anunt_id = an. ID ORDER BY ID LIMIT 1) AS image FROM ${table} AS an WHERE an.status = 1 ${aftSql}`
+function getForHorzBlock (aftSql, vars, ignoreStatus) {
+  let sql = `SELECT an. ID, an.titlu, an.price, an. VIEW, an.add_dt, an.status,( SELECT img.url FROM img_anunt AS img WHERE img.anunt_id = an. ID ORDER BY ID LIMIT 1) AS image FROM ${table} AS an WHERE `
+
+  sql += ignoreStatus ? '1 = 1 ' : 'an.status = 1 '
+  sql += aftSql
+
   return db.query(sql, vars)
 }
 
